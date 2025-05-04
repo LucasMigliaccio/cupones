@@ -186,8 +186,8 @@
                    <string>...</string>
                   </property>
                   <property name="icon">
-                   <iconset>
-                    <normaloff>../../../Softbarber/softbarberr/AngelCuk/assets/icons/minimize-window.png</normaloff>../../../Softbarber/softbarberr/AngelCuk/assets/icons/minimize-window.png</iconset>
+                   <iconset resource="source.qrc">
+                    <normaloff>:/images_to_icon/minimize-window.png</normaloff>:/images_to_icon/minimize-window.png</iconset>
                   </property>
                  </widget>
                  <widget class="QToolButton" name="restore_button">
@@ -203,8 +203,8 @@
                    <string>...</string>
                   </property>
                   <property name="icon">
-                   <iconset>
-                    <normaloff>../../../Softbarber/softbarberr/AngelCuk/assets/icons/restore-window.png</normaloff>../../../Softbarber/softbarberr/AngelCuk/assets/icons/restore-window.png</iconset>
+                   <iconset resource="source.qrc">
+                    <normaloff>:/images_to_icon/restore-window.png</normaloff>:/images_to_icon/restore-window.png</iconset>
                   </property>
                  </widget>
                  <widget class="QToolButton" name="maximize_button">
@@ -220,8 +220,8 @@
                    <string>...</string>
                   </property>
                   <property name="icon">
-                   <iconset>
-                    <normaloff>../../../Softbarber/softbarberr/AngelCuk/assets/icons/maximize-window.png</normaloff>../../../Softbarber/softbarberr/AngelCuk/assets/icons/maximize-window.png</iconset>
+                   <iconset resource="source.qrc">
+                    <normaloff>:/images_to_icon/maximize-window.png</normaloff>:/images_to_icon/maximize-window.png</iconset>
                   </property>
                  </widget>
                  <widget class="QToolButton" name="close_button">
@@ -237,8 +237,8 @@
                    <string>...</string>
                   </property>
                   <property name="icon">
-                   <iconset>
-                    <normaloff>../../../Softbarber/softbarberr/AngelCuk/assets/icons/close-window.png</normaloff>../../../Softbarber/softbarberr/AngelCuk/assets/icons/close-window.png</iconset>
+                   <iconset resource="source.qrc">
+                    <normaloff>:/images_to_icon/close-window.png</normaloff>:/images_to_icon/close-window.png</iconset>
                   </property>
                  </widget>
                 </widget>
@@ -346,6 +346,16 @@ QPushButton:hover{
 </string>
                  </property>
                  <property name="text">
+                  <string>Eliminar Cupon</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLabel" name="label_2">
+                 <property name="styleSheet">
+                  <string notr="true">color: white;</string>
+                 </property>
+                 <property name="text">
                   <string/>
                  </property>
                 </widget>
@@ -434,6 +444,13 @@ QPushButton:hover{
                  </property>
                  <layout class="QHBoxLayout" name="horizontalLayout_5">
                   <item>
+                   <widget class="QProgressBar" name="progressBar">
+                    <property name="value">
+                     <number>24</number>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
                    <spacer name="horizontalSpacer_2">
                     <property name="orientation">
                      <enum>Qt::Horizontal</enum>
@@ -454,55 +471,6 @@ QPushButton:hover{
                     <property name="rightMargin">
                      <number>0</number>
                     </property>
-                    <item>
-                     <widget class="QLabel" name="label">
-                      <property name="minimumSize">
-                       <size>
-                        <width>30</width>
-                        <height>30</height>
-                       </size>
-                      </property>
-                      <property name="maximumSize">
-                       <size>
-                        <width>30</width>
-                        <height>16777215</height>
-                       </size>
-                      </property>
-                      <property name="styleSheet">
-                       <string notr="true">background-color: black;
-border-radius: 0px;</string>
-                      </property>
-                      <property name="text">
-                       <string/>
-                      </property>
-                      <property name="pixmap">
-                       <pixmap>../../../Softbarber/softbarberr/AngelCuk/assets/icons/search.png</pixmap>
-                      </property>
-                     </widget>
-                    </item>
-                    <item>
-                     <widget class="QLineEdit" name="search_line_edit">
-                      <property name="minimumSize">
-                       <size>
-                        <width>0</width>
-                        <height>30</height>
-                       </size>
-                      </property>
-                      <property name="maximumSize">
-                       <size>
-                        <width>500</width>
-                        <height>16777215</height>
-                       </size>
-                      </property>
-                      <property name="styleSheet">
-                       <string notr="true">background-color: white;
-border-radius: 0px;</string>
-                      </property>
-                      <property name="placeholderText">
-                       <string>  Buscar...</string>
-                      </property>
-                     </widget>
-                    </item>
                    </layout>
                   </item>
                  </layout>
@@ -533,17 +501,9 @@ border-radius: 0px;</string>
                    <number>0</number>
                   </property>
                   <item>
-                   <widget class="QTableWidget" name="infopedidos_table">
-                    <property name="font">
-                     <font>
-                      <pointsize>12</pointsize>
-                     </font>
-                    </property>
+                   <widget class="QTableView" name="tableView">
                     <property name="styleSheet">
                      <string notr="true">background-color: rgb(235, 235, 235);</string>
-                    </property>
-                    <property name="sizeAdjustPolicy">
-                     <enum>QAbstractScrollArea::AdjustToContents</enum>
                     </property>
                    </widget>
                   </item>
@@ -565,7 +525,7 @@ border-radius: 0px;</string>
   </layout>
  </widget>
  <resources>
-  <include location="../../../Softbarber/softbarberr/ui_files/icons.qrc"/>
+  <include location="source.qrc"/>
  </resources>
  <connections/>
 </ui>

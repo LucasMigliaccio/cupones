@@ -15,10 +15,16 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QFont, QFontDatabase, QGradient, QIcon,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
-from PySide6.QtWidgets import (QAbstractScrollArea, QApplication, QFrame, QHBoxLayout,
-    QHeaderView, QLabel, QLineEdit, QPushButton,
-    QSizePolicy, QSpacerItem, QTableWidget, QTableWidgetItem,
-    QToolButton, QVBoxLayout, QWidget)
+from PySide6.QtWidgets import (QApplication, QFrame, QHBoxLayout, QHeaderView,
+    QLabel, QProgressBar, QPushButton, QSizePolicy,
+    QSpacerItem, QTableView, QToolButton, QVBoxLayout,
+    QWidget)
+
+import sys
+import os
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+import source
+
 
 class MainWindow(object):
     def setupUi(self, MainWindow):
@@ -86,25 +92,25 @@ class MainWindow(object):
         self.minimize_button.setObjectName(u"minimize_button")
         self.minimize_button.setGeometry(QRect(0, 0, 22, 22))
         icon = QIcon()
-        icon.addFile(u"./assets/icons/minimize-window.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        icon.addFile(u":/images_to_icon/minimize-window.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
         self.minimize_button.setIcon(icon)
         self.restore_button = QToolButton(self.butttons_holder_frame)
         self.restore_button.setObjectName(u"restore_button")
         self.restore_button.setGeometry(QRect(30, 0, 22, 22))
         icon1 = QIcon()
-        icon1.addFile(u"./assets/icons/restore-window.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        icon1.addFile(u":/images_to_icon/restore-window.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
         self.restore_button.setIcon(icon1)
         self.maximize_button = QToolButton(self.butttons_holder_frame)
         self.maximize_button.setObjectName(u"maximize_button")
         self.maximize_button.setGeometry(QRect(30, 0, 22, 22))
         icon2 = QIcon()
-        icon2.addFile(u"./assets/icons/maximize-window.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        icon2.addFile(u":/images_to_icon/maximize-window.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
         self.maximize_button.setIcon(icon2)
         self.close_button = QToolButton(self.butttons_holder_frame)
         self.close_button.setObjectName(u"close_button")
         self.close_button.setGeometry(QRect(60, 0, 22, 22))
         icon3 = QIcon()
-        icon3.addFile(u"./assets/icons/close-window.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        icon3.addFile(u":/images_to_icon/close-window.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
         self.close_button.setIcon(icon3)
 
         self.horizontalLayout_6.addWidget(self.butttons_holder_frame)
@@ -177,6 +183,12 @@ class MainWindow(object):
 
         self.horizontalLayout_2.addWidget(self.ceo_button)
 
+        self.label_2 = QLabel(self.frame_superior)
+        self.label_2.setObjectName(u"label_2")
+        self.label_2.setStyleSheet(u"color: white;")
+
+        self.horizontalLayout_2.addWidget(self.label_2)
+
         self.horizontalSpacer = QSpacerItem(110, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
 
         self.horizontalLayout_2.addItem(self.horizontalSpacer)
@@ -219,6 +231,12 @@ class MainWindow(object):
         self.frame_5.setFrameShadow(QFrame.Raised)
         self.horizontalLayout_5 = QHBoxLayout(self.frame_5)
         self.horizontalLayout_5.setObjectName(u"horizontalLayout_5")
+        self.progressBar = QProgressBar(self.frame_5)
+        self.progressBar.setObjectName(u"progressBar")
+        self.progressBar.setValue(24)
+
+        self.horizontalLayout_5.addWidget(self.progressBar)
+
         self.horizontalSpacer_2 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
 
         self.horizontalLayout_5.addItem(self.horizontalSpacer_2)
@@ -227,25 +245,6 @@ class MainWindow(object):
         self.horizontalLayout_3.setSpacing(0)
         self.horizontalLayout_3.setObjectName(u"horizontalLayout_3")
         self.horizontalLayout_3.setContentsMargins(-1, -1, 0, -1)
-        self.label = QLabel(self.frame_5)
-        self.label.setObjectName(u"label")
-        self.label.setMinimumSize(QSize(30, 30))
-        self.label.setMaximumSize(QSize(30, 16777215))
-        self.label.setStyleSheet(u"background-color: black;\n"
-"border-radius: 0px;")
-        self.label.setPixmap(QPixmap(u"./assets/icons/search.png"))
-
-        self.horizontalLayout_3.addWidget(self.label)
-
-        self.search_line_edit = QLineEdit(self.frame_5)
-        self.search_line_edit.setObjectName(u"search_line_edit")
-        self.search_line_edit.setMinimumSize(QSize(0, 30))
-        self.search_line_edit.setMaximumSize(QSize(500, 16777215))
-        self.search_line_edit.setStyleSheet(u"background-color: white;\n"
-"border-radius: 0px;")
-
-        self.horizontalLayout_3.addWidget(self.search_line_edit)
-
 
         self.horizontalLayout_5.addLayout(self.horizontalLayout_3)
 
@@ -260,15 +259,11 @@ class MainWindow(object):
         self.verticalLayout_8.setSpacing(0)
         self.verticalLayout_8.setObjectName(u"verticalLayout_8")
         self.verticalLayout_8.setContentsMargins(0, 0, 0, 0)
-        self.infopedidos_table = QTableWidget(self.frame)
-        self.infopedidos_table.setObjectName(u"infopedidos_table")
-        font2 = QFont()
-        font2.setPointSize(12)
-        self.infopedidos_table.setFont(font2)
-        self.infopedidos_table.setStyleSheet(u"background-color: rgb(235, 235, 235);")
-        self.infopedidos_table.setSizeAdjustPolicy(QAbstractScrollArea.AdjustToContents)
+        self.tableView = QTableView(self.frame)
+        self.tableView.setObjectName(u"tableView")
+        self.tableView.setStyleSheet(u"background-color: rgb(235, 235, 235);")
 
-        self.verticalLayout_8.addWidget(self.infopedidos_table)
+        self.verticalLayout_8.addWidget(self.tableView)
 
 
         self.verticalLayout_5.addWidget(self.frame)
@@ -299,9 +294,8 @@ class MainWindow(object):
         self.maximize_button.setText(QCoreApplication.translate("MainWindow", u"...", None))
         self.close_button.setText(QCoreApplication.translate("MainWindow", u"...", None))
         self.operador_button.setText(QCoreApplication.translate("MainWindow", u"Subir Cupon", None))
-        self.ceo_button.setText("")
+        self.ceo_button.setText(QCoreApplication.translate("MainWindow", u"Eliminar Cupon", None))
+        self.label_2.setText("")
         self.recuento_button.setText(QCoreApplication.translate("MainWindow", u"RECUENTO", None))
-        self.label.setText("")
-        self.search_line_edit.setPlaceholderText(QCoreApplication.translate("MainWindow", u"  Buscar...", None))
     # retranslateUi
 
