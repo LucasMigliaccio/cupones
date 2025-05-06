@@ -42,6 +42,7 @@ class MainWindowForm(QWidget, MainWindow):
         self.ui.mouse_press_event(event)
 
     def abrir_selector_archivos(self):
+        # Selección de archivo
         archivo, _ = QFileDialog.getOpenFileName(
             self,
             "Seleccionar archivo",
@@ -49,59 +50,79 @@ class MainWindowForm(QWidget, MainWindow):
             "Archivos Excel (*.xlsx *.xls);;Archivos CSV (*.csv);;Todos los archivos (*)"
         )
 
-        if archivo:
-            print(f"📁 Archivo seleccionado:\n{archivo}")
+        if not archivo:
+            return
 
-            # Leer el archivo
-            try:
-                if archivo.endswith(".csv"):
-                    df = pd.read_csv(archivo, skiprows=12)
-                else:
-                    df = pd.read_excel(archivo, skiprows=12)
+        try:
+            # Leer el archivo saltando encabezados
+            if archivo.lower().endswith(".csv"):
+                df = pd.read_csv(archivo, skiprows=12)
+            else:
+                df = pd.read_excel(archivo, skiprows=12)
 
+            # Normalizar nombres de columnas
+            df.columns = [c.strip() for c in df.columns]
+            cols_esperadas = [
+                "Artículo", "Nombre", "Física disponible", "Almacen",
+                "Clase", "Marca", "Matriz", "Tipo de Producto",
+                "Precio anterior", "Precio actual"
+            ]
+            if not all(col in df.columns for col in cols_esperadas):
+                self.label_2.setText("❌ Error: El archivo no contiene todas las columnas necesarias.")
+                return
 
-                print (df)
+            # Preparo la carpeta de base de datos
+            # Ruta absoluta según ubicación del script
+            base_dir = os.path.dirname(os.path.abspath(__file__))
+            db_folder = os.path.join(base_dir, '..', 'database')
+            os.makedirs(db_folder, exist_ok=True)
+            db_path = os.path.join(db_folder, 'cupon.sqlite3')
 
-                # Normalizar nombres de columnas para que coincidan con la tabla
-                df.columns = [c.strip() for c in df.columns]
-                columnas_esperadas = [
-                    "Artículo", "Nombre", "Física disponible", "Almacen",
-                    "Clase", "Marca", "Matriz", "Tipo de Producto",
-                    "Precio anterior", "Precio actual"
-                ]
+            # Conectar y crear tabla si no existe
+            conn = sqlite3.connect(db_path)
+            cursor = conn.cursor()
+            cursor.execute('''
+                CREATE TABLE IF NOT EXISTS cupon (
+                    ID INTEGER PRIMARY KEY AUTOINCREMENT,
+                    "Artículo" TEXT,
+                    "Nombre" TEXT,
+                    "Física disponíble" INTEGER,
+                    "Almacen" INTEGER,
+                    "Clase" TEXT,
+                    "Marca" TEXT,
+                    "Matriz" TEXT,
+                    "Tipo de Producto" TEXT,
+                    "Precio anterior" INTEGER,
+                    "Precio actual" INTEGER
+                )
+            ''')
 
-                # Verifica que estén todas las columnas necesarias
-                if not all(col in df.columns for col in columnas_esperadas):
-                    self.label_2.setText("❌ Error: El archivo no contiene todas las columnas necesarias.")
-
-                    print("❌ Error: El archivo no contiene todas las columnas necesarias.")
-                    return
-
-               
-                conn = sqlite3.connect("database/cupon.sqlite3")
-                cursor = conn.cursor()
-
-                for _, row in df.iterrows():
-                    cursor.execute("""
-                        INSERT INTO cupon (
-                            Artículo, Nombre, "Física disponíble", Almacen,
-                            Clase, Marca, Matriz, "Tipo de Producto",
-                            "Precio anterior", "Precio actual"
-                        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-                    """, (
-                        row["Artículo"], row["Nombre"], row["Física disponible"], row["Almacen"],
-                        row["Clase"], row["Marca"], row["Matriz"], row["Tipo de Producto"],
+            # Insertar filas
+            for _, row in df.iterrows():
+                cursor.execute(
+                    """INSERT INTO cupon (
+                        "Artículo", "Nombre", \"Física disponíble\", "Almacen",
+                        "Clase", "Marca", "Matriz", \"Tipo de Producto\",
+                        \"Precio anterior\", \"Precio actual\"
+                    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
+                    (
+                        row["Artículo"], row["Nombre"], int(row["Física disponible"]),
+                        int(row["Almacen"]), row["Clase"], row["Marca"], row["Matriz"],
+                        row["Tipo de Producto"],
                         int(str(row["Precio anterior"]).replace(".", "").replace(",", "")),
                         int(str(row["Precio actual"]).replace(".", "").replace(",", ""))
-                    ))
+                    )
+                )
 
-                conn.commit()
-                conn.close()
-                articulos = df['Artículo'].astype(str).tolist()
-                self.label_2.setText("✅ Datos insertados correctamente en la tabla cupones.")
-                print("✅ Datos insertados correctamente en la tabla cupones.")
-            except Exception as e:
-                print(f"❌ Error al procesar archivo: {e}")
+            conn.commit()
+            conn.close()
+
+            self.label_2.setText("✅ Datos guardados correctamente en la base de datos.")
+            print("✅ Inserción completada en:", db_path)
+
+        except Exception as e:
+            print(f"❌ Error al procesar archivo: {e}")
+            self.label_2.setText(f"❌ Error al procesar archivo: {e}")
                 
     def analizar_archivo(self):
         print("llsss")
